@@ -267,7 +267,7 @@ fn q_to_latex(q: &Value, num: usize, bank_dir: &Path) -> String {
     let raw_text = qdata.get("text").and_then(|v| v.as_str()).unwrap_or("");
     let body = html2tex(&latex_to_html(raw_text));
     let fig_latex = resolve_figure(&qdata, bank_dir)
-        .map(|p| format!("\n\\begin{{center}}\\includegraphics[max width=0.8\\linewidth]{{{}}}\\end{{center}}\n",
+        .map(|p| format!("\n\\begin{{center}}\\includegraphics[width=0.8\\linewidth,keepaspectratio]{{{}}}\\end{{center}}\n",
             p.to_string_lossy()))
         .unwrap_or_default();
     let mut out = vec![
