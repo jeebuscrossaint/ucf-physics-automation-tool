@@ -502,7 +502,7 @@ fn bank_data(path: String) -> Result<Value, String> {
             ];
             for candidate in &candidates {
                 if candidate.exists() {
-                    fig_url = Some(format!("figure:///{}", candidate.to_string_lossy()));
+                    fig_url = figure_to_base64(candidate);
                     break;
                 }
             }
