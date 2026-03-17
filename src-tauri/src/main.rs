@@ -795,13 +795,17 @@ hr{{border:none;border-top:1.5px solid #e0ded6;margin:.5cm 0 .7cm;}}
 .ans-opt{{padding:.15cm .38cm;border:1px solid #e8e6df;border-radius:5px;font-size:10pt;color:#3d3b35;}}
 .ans-ok{{padding:.15cm .38cm;border:1px solid rgba(26,122,53,.35);background:rgba(26,122,53,.06);border-radius:5px;font-size:10pt;color:#1a7a35;}}
 .ans-space{{border-bottom:1px solid #bbb;height:1.2cm;margin-bottom:.5cm;}}
-.work-area{{border:1.5px dashed #d5d2c8;border-radius:7px;padding:.4cm .6cm;min-height:15cm;}}
+.work-area{{border:1.5px dashed #d5d2c8;border-radius:7px;padding:.4cm .6cm;min-height:7cm;}}
 .work-lbl{{font-size:7pt;color:#c5c2b8;text-transform:uppercase;letter-spacing:.1em;}}
+.q-fig img{{max-width:100%;max-height:7cm;display:block;margin:.3cm auto;}}
 .katex-display{{margin:.4cm 0;overflow-x:auto;}}
+@page{{size:letter;margin:2cm 2.4cm;}}
 @media print{{
   body{{background:#fff;}}
-  .sheet{{box-shadow:none;margin:0 !important;max-width:none;padding:2cm 2.4cm;border-radius:0 !important;border-top:none !important;break-after:page;page-break-after:always;}}
+  .sheet{{box-shadow:none;margin:0 !important;max-width:none;padding:0;border-radius:0 !important;border-top:none !important;break-after:page;page-break-after:always;}}
   .sheet:last-child{{break-after:auto;page-break-after:auto;}}
+  .work-area{{min-height:6cm;}}
+  .q-fig img{{max-height:5cm;}}
 }}
 </style>
 </head>
