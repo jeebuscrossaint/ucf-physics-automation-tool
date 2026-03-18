@@ -215,6 +215,17 @@ fn extract_mc_answers(answers: &Value) -> Vec<(usize, String, bool)> {
     result
 }
 
+fn strip_round_instruction(text: &str) -> String {
+    // Strip trailing "Round your answer..." rounding instructions from numerical questions
+    if let Some(pos) = text.rfind("Round") {
+        let before_trimmed = text[..pos].trim_end();
+        if pos == 0 || before_trimmed.ends_with(|c: char| matches!(c, '.' | '?' | '!')) {
+            return before_trimmed.to_string();
+        }
+    }
+    text.to_string()
+}
+
 fn tol_str(tol: &str, margin_type: &str) -> String {
     if tol.is_empty() {
         return String::new();
@@ -271,7 +282,11 @@ fn q_to_latex(q: &Value, num: usize, bank_dir: &Path) -> String {
     let qtype = get_qtype(q);
     let qdata = q.get(&qtype).cloned().unwrap_or(json!({}));
     let raw_text = qdata.get("text").and_then(|v| v.as_str()).unwrap_or("");
-    let body = html2tex(&latex_to_html(raw_text));
+    let mut body = html2tex(&latex_to_html(raw_text));
+    if qtype == "numerical" {
+        body = strip_round_instruction(&body);
+        body.push_str("\n\nPlease show your work in the space below.");
+    }
     let fig_latex = resolve_figure(&qdata, bank_dir)
         .map(|p| format!("\n\\begin{{center}}\\includegraphics[width=0.8\\linewidth,keepaspectratio]{{{}}}\\end{{center}}\n",
             p.to_string_lossy()))
@@ -284,17 +299,8 @@ fn q_to_latex(q: &Value, num: usize, bank_dir: &Path) -> String {
     ];
 
     if qtype == "numerical" {
-        let ans = qdata.get("answer").cloned().unwrap_or(json!({}));
-        let val = ans.get("value").map(|v| v.to_string().trim_matches('"').to_string()).unwrap_or_default();
-        let tol = ans.get("tolerance").and_then(|v| v.as_str()).unwrap_or("");
-        let margin_type = ans.get("margin_type").and_then(|v| v.as_str()).unwrap_or("");
-        let ts = tol_str(tol, margin_type);
-        let val_str = if !val.is_empty() && val != "null" {
-            format!(", ${}{}$", val, ts)
-        } else {
-            String::new()
-        };
-        out.push(format!(r"\vspace{{4mm}}\underline{{\hspace{{4cm}}}} \textit{{(Numerical{})}}", val_str));
+        out.push(r"\vspace{4mm}\underline{\hspace{4cm}} \textit{(Numerical)}".to_string());
+        out.push(r"\vspace{6cm}".to_string());
         out.push(String::new());
     } else if qtype == "multiple_choice" || qtype == "multiple_answers" {
         out.push("\\begin{choices}".to_string());
@@ -745,10 +751,12 @@ fn build_pdf_html(cart: &Value, version: i64, title: &str, include_answers: bool
                 }
 
                 q_num += 1;
-                let work = if include_answers {
-                    String::new()
-                } else {
+                let needs_work_area = !include_answers
+                    && !matches!(qtype.as_str(), "multiple_choice" | "multiple_answers" | "true_false");
+                let work = if needs_work_area {
                     "<div class=\"work-area\"><span class=\"work-lbl\">Work</span></div>".to_string()
+                } else {
+                    String::new()
                 };
 
                 parts.push(format!(
