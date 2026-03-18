@@ -1,5 +1,5 @@
 {
-  "productName": "ESTELA",
+  "productName": "ESTELA Exam Builder",
   "version": "0.1.0",
   "identifier": "edu.ucf.estela",
   "build": {
@@ -21,7 +21,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "ESTELA · Problem Bank Visualizer",
+        "title": "ESTELA Exam Builder",
         "width": 1280,
         "height": 820,
         "minWidth": 900,
