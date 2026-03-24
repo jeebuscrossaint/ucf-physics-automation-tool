@@ -4,6 +4,37 @@ src-tauri/target/
 # Node
 node_modules/
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Type checkers / linters
+.mypy_cache/
+.ruff_cache/
+.pyre/
+
+# Jupyter
+.ipynb_checkpoints/
+
 # OS
 .DS_Store
 Thumbs.db
@@ -12,3 +43,4 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
